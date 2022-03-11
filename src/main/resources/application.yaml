@@ -1,0 +1,118 @@
+server:
+  port: 8080
+
+# 应用名称
+spring:
+  #启动默认静态资源缓存对应请求状态码为304，请求头的一列参数为If-Modified-Since（表示这个时间内使用更新就用更新的数据，这个时间过后就用缓存的数据）
+  resources:
+    cache:
+      cachecontrol:
+        #缓存相应时间，单位秒
+        max-age: 3600
+    chain:
+      #资源链，是否对整个资源链都启动缓存呢，默认启动
+      cache: true
+      #是否启动资源链，默认禁用
+      enabled: true
+      #启动压缩资源（gzip、brotli）解析，默认禁用
+      compressed: true
+      #启动h5应用缓存，默认禁用
+      html-application-cache: true
+    static-locations: classpath:/static/
+
+
+
+  application:
+    name: seckillDemo
+# THYMELEAF (ThymeleafAutoConfiguration)
+# 关闭模板缓存（默认值： true ）
+  thymeleaf:
+    cache: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/seckill_db?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 200627  #主机的mysql
+    druid:
+      #自定义连接池名字
+      name: DateDruidCP
+      # 最小空闲连接数，空闲时间连接最大存活时间（druid默认是十分钟）
+      min-idle: 5
+      #最大连接数
+      max-active: 10
+      #从数据库返回的连接自动提交
+      default-auto-commit: true
+      #连接超时时间
+      max-wait: 30000
+      keep-alive: true
+
+  redis:
+    # 服务器IP
+    host: 
+    # 超时时间
+    timeout: 10000ms
+    lettuce:
+      pool:
+        # 最大等待时间，最大连接阻塞时间
+        max-wait: 10000ms
+        # 最大空闲连接
+        max-idle: 200
+        # 最小空闲连接
+        min-idle: 5
+
+  rabbitmq:
+    host:
+    port: 5672
+    #用户名和密码 默认都是guest，如果使用默认的用户会导致远程访问失败，所以我们使用自己创建的用户
+#    username: guest
+#    password: guest
+    username: root
+    password: root
+    #虚拟主机
+    virtual-host: /
+    listener:
+      simple:
+        #消费者的最小数量
+        concurrency: 10
+        #消费者的最大数量
+        max-concurrency: 10
+        #限制消费者每次只能处理一条消息，处理完在处理下一条
+        prefetch: 1
+        #启动时是否默认启动容器，默认为true
+        auto-startup: true
+        #被拒绝时重新进入队列
+        default-requeue-rejected: true
+    template:
+      retry:
+        #发布重试，默认为false
+        enabled: true
+        #重试时间，默认为1000ms
+        initial-interval: 1000ms
+        #重试最大次数，默认为三次
+        max-attempts: 3
+        #重试最大间隔时间，默认为10000ms
+        max-interval: 10000ms
+        #重试间隔时间，例如 2.0 第一次为10s、第二次为20s、第三次为40s
+        multiplier: 1
+
+
+
+mybatis-plus:
+  #配置mapper.xml映射文件
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  #配置MyBatis数据返回类型别名(默认别名是类名)
+  type-aliases-package: com.lhjitem.seckilldemo.pojo
+
+logging:
+  level:
+    com:
+      lhjitem:
+        seckilldemo:
+          mapper: debug
+    root: info
+
+
+
+
+
+
